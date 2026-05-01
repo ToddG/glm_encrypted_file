@@ -1,5 +1,7 @@
 # glm_encrypted_file
 
+This is a simple wrapper around openssl for reading and writing encrypted files.
+
 [![Package Version](https://img.shields.io/hexpm/v/glm_encrypted_file)](https://hex.pm/packages/glm_encrypted_file)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glm_encrypted_file/)
 
