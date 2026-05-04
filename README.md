@@ -53,8 +53,9 @@ Decrypt a file shell command:
 ## Example
 
 ```sh
-gleam add glm_encrypted_file@1
+gleam add glm_encrypted_file@2
 ```
+
 ```gleam
 import glm_encrypted_file/openssl
 import simplifile
