@@ -224,11 +224,17 @@ pub fn decrypt_incorrect_password_test() {
   //  ...
   //  226, 72, 62, 139, 88, 147, 128, 207, 141, 146, 98, 100, 30, 187, 61, 123, 129, 9, 100, 119, 242, 45, 165, 95, 25, 3>>))
   //  info: Pattern match failed, no pattern matched the value.
+  //
+  // Used Proton Lumo to decode the bitstring to:
+  //
+  //  bad decrypt
+  //  80E0A22262710000:error:1C800064:Provider routines:ossl_cipher_unpadblock:bad decrypt:providers/implementations/ciphers/ciphercommon_block.c:107:
+  //  <binary data follows>
 
   // Attempt to decrypt file with an incorrect password
-  let assert Error(openssl.OpenSslError(1, _b)) =
+  let assert Error(openssl.OpenSslError(1, b)) =
     openssl.decrypt(encrypted_file, password_file)
-  // TODO: figure out why `b` is not displaying as a string, but instead as a bit string
+  let assert True = string.starts_with(b, "bad decrypt")
   Ok(Nil)
 }
 
