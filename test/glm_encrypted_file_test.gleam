@@ -240,15 +240,8 @@ pub fn decrypt_incorrect_password_test() {
 
 /// example code for the README
 pub fn example_for_readme() {
-  // ----------------------------------------------------------------------------------
   // ensure this directory exists
-  // ----------------------------------------------------------------------------------
   let assert Ok(_) = simplifile.create_directory_all("./test_data")
-
-  // ----------------------------------------------------------------------------------
-  // create some file resources
-  // ----------------------------------------------------------------------------------
-  // note that the file resources are typed as one of [encrypted, plaintext, password]
 
   // plaintext to encrypt
   let plaintext_file = "./test_data/plaintext.txt"
@@ -261,20 +254,10 @@ pub fn example_for_readme() {
   // an encrypted output file
   let encrypted_file = "./test_data/encrypted.enc"
 
-  // ----------------------------------------------------------------------------------
   // encrypt the plaintext
-  // ----------------------------------------------------------------------------------
   let assert Ok(_) =
     openssl.encrypt(plaintext_file, encrypted_file, password_file)
 
-  // TODO: 1. Copy the encrypted file to it's final storage location.
-
-  // TODO: 2. Delete the plaintext file!
-
-  // TODO: 3. Secure (or delete) the password file!
-
-  // ----------------------------------------------------------------------------------
   // decrypt the encrypted file
-  // ----------------------------------------------------------------------------------
   let assert Ok(_secret) = openssl.decrypt(encrypted_file, password_file)
 }

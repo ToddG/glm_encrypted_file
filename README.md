@@ -18,7 +18,8 @@ for `ansible vault` for CI/CD type automation.
 
 1. The author is not a an expert in security, gleam, erlang, or openssl
 2. The author cannot guarantee that 'glm_encrypted_file' is appropriate for you and your use case
-3. The author has not tested or otherwise characterized this library. The authort has unknown performance characteristics.
+3. The author has not tested or otherwise characterized this library. 
+4. Because of #3 above, the library has unknown performance characteristics.
 
 
 ### OpenSSL
@@ -55,48 +56,30 @@ Decrypt a file shell command:
 gleam add glm_encrypted_file@1
 ```
 ```gleam
-import logging
-import gleeunit
-import glm_encrypted_file/encfile
+import glm_encrypted_file/openssl
 import simplifile
 
 pub fn main() -> Nil {
-   // ----------------------------------------------------------------------------------
-   // ensure this directory exists
-   // ----------------------------------------------------------------------------------
-   let assert Ok(_) = simplifile.create_directory_all("./test_data")
-   // ensure that only this user can access this directory
-   
-   // ----------------------------------------------------------------------------------
-   // create some file resources
-   // ----------------------------------------------------------------------------------
-   // plaintext to encrypt
-   let plaintext_file = "./test_data/plaintext.txt"
-   let assert Ok(_) = simplifile.write(plaintext_file, "sample plaintext")
+  // ensure this directory exists
+  let assert Ok(_) = simplifile.create_directory_all("./test_data")
 
-   // a password to encrypt with
-   let password_file = "./test_data/password.txt"
-   let assert Ok(_) = simplifile.write(password_file, "password")
+  // plaintext to encrypt
+  let plaintext_file = "./test_data/plaintext.txt"
+  let assert Ok(_) = simplifile.write(plaintext_file, "sample plaintext")
 
-   // an encrypted output file
-   let encrypted_file = "./test_data/encrypted.enc"
+  // a password to encrypt with
+  let password_file = "./test_data/password.txt"
+  let assert Ok(_) = simplifile.write(password_file, "password")
 
-   // ----------------------------------------------------------------------------------
-   // encrypt the plaintext
-   // ----------------------------------------------------------------------------------
-   let assert Ok(_) =
-   encfile.encrypt(plaintext_file, encrypted_file, password_file)
-   
-   // TODO: 1. Copy the encrypted file to it's final storage location.
-   
-   // TODO: 2. Delete the plaintext file!
+  // an encrypted output file
+  let encrypted_file = "./test_data/encrypted.enc"
 
-   // TODO: 3. Secure (or delete) the password file!
+  // encrypt the plaintext
+  let assert Ok(_) =
+    openssl.encrypt(plaintext_file, encrypted_file, password_file)
 
-   // ----------------------------------------------------------------------------------
-   // decrypt the encrypted file
-   // ----------------------------------------------------------------------------------
-   let assert Ok(_secret) = encfile.decrypt(encrypted_file, password_file)
+  // decrypt the encrypted file
+  let assert Ok(_secret) = openssl.decrypt(encrypted_file, password_file)
 }
 ```
 
