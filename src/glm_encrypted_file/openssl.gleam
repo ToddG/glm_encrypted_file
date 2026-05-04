@@ -1,9 +1,6 @@
 /// This library is a shell command wrapper around openssl.
-import gleam/int
 import gleam/list
 import gleam/result
-import gleam/string
-import logging
 import shellout
 
 /// openssl shell command args
@@ -27,29 +24,24 @@ const openssl_encrypt_command_arguments = ["-e", "-salt"]
 /// openssl command
 const openssl_command = "openssl"
 
-/// openssl password file path
-pub type PasswordFilePath =
-  String
-
-/// openssl encrypted file path (input or output)
-pub type EncryptedFilePath =
-  String
-
-/// openssl plaintext file path (input only)
-pub type PlaintextFilePath =
-  String
-
 /// Error types for this library
-pub type EncFileError {
-  DecryptEncryptedFileError(List(String))
-  EncryptEncryptedFileError(List(String))
+pub type OpenSslError {
+  /// OpenSslError is the shellout error passed through. From the shellout docs:
+  ///
+  ///   '''An Error result wraps a tuple in which the first element is an
+  ///   OS error status code and the second is a message about what went wrong
+  ///   (or an empty string).'''
+  ///
+  /// * Int: is the os error status code
+  /// * String: message about what went wrong
+  OpenSslError(Int, String)
 }
 
 /// Decrypt an encrypted file to a plaintext string
 pub fn decrypt(
-  encrypted_file: EncryptedFilePath,
-  password_file: PasswordFilePath,
-) -> Result(String, EncFileError) {
+  encrypted_file: String,
+  password_file: String,
+) -> Result(String, OpenSslError) {
   let command_arguments =
     [
       openssl_base_command_arguments,
@@ -64,31 +56,9 @@ pub fn decrypt(
     in: ".",
     opt: [],
   )
-  |> result.map(with: fn(output) {
-    logging.log(
-      logging.Debug,
-      "shell command succeeded: "
-        <> openssl_command
-        <> " "
-        <> string.join(command_arguments, " "),
-    )
-    // pass output back, unchanged
-    output
-  })
   |> result.map_error(fn(e) {
-    let #(a, b) = e
-    logging.log(
-      logging.Error,
-      "openssl decryption failed, shell command arguments: "
-        <> openssl_command
-        <> " "
-        <> string.join(command_arguments, " ")
-        <> ", shell command error: "
-        <> a |> int.to_string
-        <> ", "
-        <> b,
-    )
-    DecryptEncryptedFileError(command_arguments)
+    let #(os_error_int, os_error_string) = e
+    OpenSslError(os_error_int, os_error_string)
   })
 }
 
@@ -101,10 +71,10 @@ pub fn decrypt(
 /// TODO: investigate sending plaintext over stdin to openssl shellout process
 /// TODO: see https://github.com/tynanbe/shellout/issues/4
 pub fn encrypt(
-  plaintext_file: PlaintextFilePath,
-  encrypted_file: EncryptedFilePath,
-  password_file: PasswordFilePath,
-) -> Result(Nil, EncFileError) {
+  plaintext_file: String,
+  encrypted_file: String,
+  password_file: String,
+) -> Result(Nil, OpenSslError) {
   let command_arguments =
     [
       openssl_base_command_arguments,
@@ -127,28 +97,11 @@ pub fn encrypt(
     opt: [],
   )
   |> result.map(with: fn(_output) {
-    logging.log(
-      logging.Debug,
-      "shell command succeeded: "
-        <> openssl_command
-        <> " "
-        <> string.join(command_arguments, " "),
-    )
+    // Replace whatever output with Nil as it's not used by the client.
     Nil
   })
   |> result.map_error(fn(e) {
-    let #(a, b) = e
-    logging.log(
-      logging.Error,
-      "openssl encryption failed, shell command arguments: "
-        <> openssl_command
-        <> " "
-        <> string.join(command_arguments, " ")
-        <> ", shell command error: "
-        <> a |> int.to_string
-        <> ", "
-        <> b,
-    )
-    EncryptEncryptedFileError(command_arguments)
+    let #(os_error_int, os_error_string) = e
+    OpenSslError(os_error_int, os_error_string)
   })
 }

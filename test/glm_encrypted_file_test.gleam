@@ -2,15 +2,11 @@ import gleam/result
 import gleeunit
 import gleeunit/should
 import glm_encrypted_file/openssl as encfile
-import logging
 import simplifile
 import temporary
 
 pub fn main() -> Nil {
   gleeunit.main()
-  let _ = logging.configure()
-  let _ = logging.set_level(logging.Debug)
-  logging.log(logging.Info, "tests starting...")
 }
 
 pub const sample_plaintext = "THIS IS SOME SAMPLE PLAINTEXT THAT WILL BE ENCRYPTED 111111112222222223333333344444444"
