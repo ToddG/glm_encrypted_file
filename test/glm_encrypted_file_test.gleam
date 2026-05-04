@@ -1,6 +1,5 @@
 import gleam/result
 import gleeunit
-import gleeunit/should
 import glm_encrypted_file/openssl as encfile
 import simplifile
 import temporary
@@ -25,20 +24,25 @@ pub fn encrypt_test() {
   use encrypted_file <- temporary.create(temporary.file())
 
   // 2. encrypt the plaintext file
-  let _ =
-    should.be_ok(encfile.encrypt(plaintext_file, encrypted_file, password_file))
+  let assert Ok(value) =
+    encfile.encrypt(plaintext_file, encrypted_file, password_file)
+  let _ = value
 
   // 3. verify the encrypted file is not equal to the plaintext file
-  let read_plaintext = should.be_ok(simplifile.read(plaintext_file))
-  let read_encrypted = should.be_ok(simplifile.read(encrypted_file))
-  let _ = should.equal(read_plaintext, sample_plaintext)
-  let _ = should.not_equal(read_encrypted, read_plaintext)
+  let assert Ok(value) = simplifile.read(plaintext_file)
+  let read_plaintext = value
+  let assert Ok(value) = simplifile.read(encrypted_file)
+  let read_encrypted = value
+  let _ = {
+    assert read_plaintext == sample_plaintext
+  }
+  let _ = {
+    assert read_encrypted != read_plaintext
+  }
 
   // 4. decrypt the encrypted file and verify decrypted plaintext equals original plaintext
-  should.equal(
-    should.be_ok(encfile.decrypt(encrypted_file, password_file)),
-    sample_plaintext,
-  )
+  let assert Ok(value) = encfile.decrypt(encrypted_file, password_file)
+  assert value == sample_plaintext
 }
 
 /// example code for the README
