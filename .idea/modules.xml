@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/glm_encrypted_file.iml" filepath="$PROJECT_DIR$/.idea/glm_encrypted_file.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../glm_encrypted_file_cli/.idea/glm_encrypted_file_cli.iml" filepath="$PROJECT_DIR$/../glm_encrypted_file_cli/.idea/glm_encrypted_file_cli.iml" />
     </modules>
   </component>
 </project>

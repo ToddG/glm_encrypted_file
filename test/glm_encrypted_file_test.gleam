@@ -1,7 +1,7 @@
 import gleam/result
 import gleeunit
 import gleeunit/should
-import glm_encrypted_file/encfile
+import glm_encrypted_file/openssl as encfile
 import logging
 import simplifile
 import temporary
@@ -20,28 +20,29 @@ pub const sample_password = "SAMPLE_PASSWORD"
 pub fn encrypt_test() {
   // 1. create file resources
   //
-  use plaintext <- temporary.create(temporary.file())
-  let plaintext_file = encfile.new_plaintext_file(plaintext)
-  use _ <- result.try(simplifile.write(plaintext_file.path, sample_plaintext))
+  use plaintext_file <- temporary.create(temporary.file())
+  use _ <- result.try(simplifile.write(plaintext_file, sample_plaintext))
 
-  use password <- temporary.create(temporary.file())
-  let password_file = encfile.new_password_file(password)
-  use _ <- result.try(simplifile.write(password_file.path, sample_password))
+  use password_file <- temporary.create(temporary.file())
+  use _ <- result.try(simplifile.write(password_file, sample_password))
 
-  use encrypted <- temporary.create(temporary.file())
-  let encrypted_file = encfile.new_encrypted_file(encrypted)
+  use encrypted_file <- temporary.create(temporary.file())
 
   // 2. encrypt the plaintext file
   let _ =
     should.be_ok(encfile.encrypt(plaintext_file, encrypted_file, password_file))
 
   // 3. verify the encrypted file is not equal to the plaintext file
-  let read_plaintext = should.be_ok(simplifile.read(plaintext_file.path))
-  let read_encrypted = should.be_ok(simplifile.read(encrypted_file.path))
+  let read_plaintext = should.be_ok(simplifile.read(plaintext_file))
+  let read_encrypted = should.be_ok(simplifile.read(encrypted_file))
   let _ = should.equal(read_plaintext, sample_plaintext)
   let _ = should.not_equal(read_encrypted, read_plaintext)
+
+  // 4. decrypt the encrypted file and verify decrypted plaintext equals original plaintext
+  should.equal(should.be_ok(encfile.decrypt(encrypted_file, password_file)), sample_plaintext)
 }
 
+/// example code for the README
 pub fn example_for_readme() {
   // ----------------------------------------------------------------------------------
   // ensure this directory exists
@@ -54,21 +55,28 @@ pub fn example_for_readme() {
   // note that the file resources are typed as one of [encrypted, plaintext, password]
 
   // plaintext to encrypt
-  let plaintext_file = encfile.new_plaintext_file("./test_data/plaintext.txt")
-  let assert Ok(_) = simplifile.write(plaintext_file.path, "sample plaintext")
+  let plaintext_file = "./test_data/plaintext.txt"
+  let assert Ok(_) = simplifile.write(plaintext_file, "sample plaintext")
 
   // a password to encrypt with
-  let password_file = encfile.new_password_file("./test_data/password.txt")
-  let assert Ok(_) = simplifile.write(password_file.path, "password")
+  let password_file = "./test_data/password.txt"
+  let assert Ok(_) = simplifile.write(password_file, "password")
 
   // an encrypted output file
-  let encrypted_file = encfile.new_encrypted_file("./test_data/encrypted.enc")
+  let encrypted_file = "./test_data/encrypted.enc"
 
   // ----------------------------------------------------------------------------------
   // encrypt the plaintext
   // ----------------------------------------------------------------------------------
   let assert Ok(_) =
     encfile.encrypt(plaintext_file, encrypted_file, password_file)
+
+  // TODO: 1. Copy the encrypted file to it's final storage location.
+
+  // TODO: 2. Delete the plaintext file!
+
+  // TODO: 3. Secure (or delete) the password file!
+
 
   // ----------------------------------------------------------------------------------
   // decrypt the encrypted file
