@@ -1,5 +1,5 @@
 name = "glm_encrypted_file"
-version = "2.0.2"
+version = "2.0.3"
 
 description = "Read and write encrypted files using openssl shell commands."
 licences = ["Apache-2.0"]
@@ -16,5 +16,4 @@ shellout = ">= 1.8.0 and < 2.0.0"
 [dev_dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
 temporary = ">= 1.0.0 and < 2.0.0"
-asset = ">= 1.2.0 and < 2.0.0"
 simplifile = ">= 2.4.0 and < 3.0.0"
