@@ -1,22 +1,27 @@
 # glm_encrypted_file
 
 `glm_encrypted_file` is a simple wrapper around openssl for reading and writing encrypted files.
-
-## Purpose
-
 This library exists to provide low throughput access to encrypted files. The use case is as a replacement
 for `ansible vault` for CI/CD type automation.
 
-## Caveats
-
-1. The author is not a an expert in security, gleam, erlang, or openssl
-2. The author cannot guarantee that 'glm_encrypted_file' is appropriate for you and your use case
-3. The author has not tested or otherwise characterized this library. The authort has unknown performance characteristics. 
 
 [![Package Version](https://img.shields.io/hexpm/v/glm_encrypted_file)](https://hex.pm/packages/glm_encrypted_file)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glm_encrypted_file/)
 
-## Context
+## Dependencies
+* [gleam](https://gleam.run/)
+* [openssl](https://docs.openssl.org/master/)
+
+## Details
+
+### Caveats
+
+1. The author is not a an expert in security, gleam, erlang, or openssl
+2. The author cannot guarantee that 'glm_encrypted_file' is appropriate for you and your use case
+3. The author has not tested or otherwise characterized this library. The authort has unknown performance characteristics.
+
+
+### OpenSSL
 
 Using `glm_encrypted_file` is equivalent to running the following openssl commands in a terminal:
 
@@ -43,6 +48,8 @@ Decrypt a file shell command:
 4. When decrypting an encrypted file, the decrypted contents will be passed to stdout. The contents will be passed to the client process (the process invoking this library) via the shellout library. The client process will hold the entire contents of the password file in memory.
 
 5. For convenience, you _may_ want to use one encrypted file with many secrets. Or you may want to use multiple encrypted files, each with a single secret. Provided you use different passwords for each encrypted file, this could provide increased security. You make the call based on your needs and risk profile.
+
+## Example
 
 ```sh
 gleam add glm_encrypted_file@1
@@ -99,10 +106,4 @@ Further documentation can be found at <https://hexdocs.pm/glm_encrypted_file>.
 
 ```sh
 gleam test  # Run the tests
-./test.sh   # Run the CLI tests
 ```
-
-## Dependencies
-
-* [gleam](https://gleam.run/)
-* [openssl](https://docs.openssl.org/master/)
