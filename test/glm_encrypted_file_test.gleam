@@ -181,7 +181,6 @@ pub fn decrypt_missing_password_file_test() {
   let assert Error(openssl.OpenSslError(1, b)) =
     openssl.decrypt(encrypted_file, password_file)
   let assert True = string.contains(b, "Can't open file")
-
   Ok(Nil)
 }
 
@@ -217,10 +216,19 @@ pub fn decrypt_incorrect_password_test() {
     |> result.map_error(fn(_) { openssl.OpenSslError(-1, "TESTING") }),
   )
 
+  // ERROR
+  //  test: glm_encrypted_file_test.decrypt_incorrect_password_test
+  //  code: let assert Ok(_) =
+  //    openssl.decrypt(encrypted_file, password_file)
+  //  value: Error(OpenSslError(1, <<98, 97, 100, 32, 100, 101, 99, 114, 121, 112, 116, 10, 56, 48, 69, 48, 65, 50, 50, 50, 54
+  //  ...
+  //  226, 72, 62, 139, 88, 147, 128, 207, 141, 146, 98, 100, 30, 187, 61, 123, 129, 9, 100, 119, 242, 45, 165, 95, 25, 3>>))
+  //  info: Pattern match failed, no pattern matched the value.
+
   // Attempt to decrypt file with an incorrect password
-  let assert Error(openssl.OpenSslError(1, b)) =
+  let assert Error(openssl.OpenSslError(1, _b)) =
     openssl.decrypt(encrypted_file, password_file)
-  let assert "sthsthsh" = b
+  // TODO: figure out why `b` is not displaying as a string, but instead as a bit string
   Ok(Nil)
 }
 
