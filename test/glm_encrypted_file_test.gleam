@@ -39,7 +39,10 @@ pub fn encrypt_test() {
   let _ = should.not_equal(read_encrypted, read_plaintext)
 
   // 4. decrypt the encrypted file and verify decrypted plaintext equals original plaintext
-  should.equal(should.be_ok(encfile.decrypt(encrypted_file, password_file)), sample_plaintext)
+  should.equal(
+    should.be_ok(encfile.decrypt(encrypted_file, password_file)),
+    sample_plaintext,
+  )
 }
 
 /// example code for the README
@@ -76,7 +79,6 @@ pub fn example_for_readme() {
   // TODO: 2. Delete the plaintext file!
 
   // TODO: 3. Secure (or delete) the password file!
-
 
   // ----------------------------------------------------------------------------------
   // decrypt the encrypted file

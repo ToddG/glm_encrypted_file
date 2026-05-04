@@ -1,12 +1,17 @@
 # glm_encrypted_file
 
-`glm_encrypted_file` is a simple wrapper around openssl for reading and writing encrypted files. 
+`glm_encrypted_file` is a simple wrapper around openssl for reading and writing encrypted files.
+
+## Purpose
+
+This library exists to provide low throughput access to encrypted files. The use case is as a replacement
+for `ansible vault` for CI/CD type automation.
 
 ## Caveats
 
-1. I am not a an expert in security, gleam, erlang, or openssl
-2. I cannot guarantee that 'glm_encrypted_file' is appropriate for you and your use case
-
+1. The author is not a an expert in security, gleam, erlang, or openssl
+2. The author cannot guarantee that 'glm_encrypted_file' is appropriate for you and your use case
+3. The author has not tested or otherwise characterized this library. The authort has unknown performance characteristics. 
 
 [![Package Version](https://img.shields.io/hexpm/v/glm_encrypted_file)](https://hex.pm/packages/glm_encrypted_file)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glm_encrypted_file/)
@@ -33,7 +38,7 @@ Decrypt a file shell command:
 
    chmod 0500 [PASSWORD FILE DIRECTORY PATH]
 
-3. You may also want to secure the encrypted file and the directory it is stored in.
+3. You may also want to secure the encrypted file and the directory it is stored in, as well.
 
 4. When decrypting an encrypted file, the decrypted contents will be passed to stdout. The contents will be passed to the client process (the process invoking this library) via the shellout library. The client process will hold the entire contents of the password file in memory.
 
