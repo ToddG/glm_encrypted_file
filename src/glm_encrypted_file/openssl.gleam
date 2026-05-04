@@ -97,7 +97,7 @@ pub fn encrypt(
     opt: [],
   )
   |> result.map(with: fn(_output) {
-    // Replace whatever output with Nil as it's not used by the client.
+    // Replace output with Nil as the output is not used by the client.
     Nil
   })
   |> result.map_error(fn(e) {
